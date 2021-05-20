@@ -2,6 +2,7 @@
 
 namespace Netflex\Render;
 
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
@@ -11,6 +12,7 @@ use Netflex\Render\PSR7\Stream;
 use Psr\Http\Message\ResponseInterface;
 
 use Composer\InstalledVersions;
+use DateTime;
 
 class PDF extends Renderer
 {
@@ -563,6 +565,30 @@ class PDF extends Renderer
     }
 
     /**
+     * Sets the PDF creation date
+     *
+     * @param DateTime|Carbon $date
+     * @return static
+     */
+    public function created(DateTime $date)
+    {
+        $date = new Carbon($date);
+        return $this->setTag('CreationDate', 'D:' . $date->format('YmdHis') . "+00'00'");
+    }
+
+    /**
+     * Sets the PDF last modified date
+     *
+     * @param DateTime|Carbon $date
+     * @return static
+     */
+    public function modified(DateTime $date)
+    {
+        $date = new Carbon($date);
+        return $this->setTag('ModDate', 'D:' . $date->format('YmdHis') . "+00'00'");
+    }
+
+    /**
      * Postprocessing stage
      *
      * @param ResponseInterface $response
@@ -570,6 +596,16 @@ class PDF extends Renderer
      */
     protected function postProcess(ResponseInterface $response): ResponseInterface
     {
+        $now = Carbon::now();
+
+        if (!$this->getTag('CreationDate')) {
+            $this->created($now);
+        }
+
+        if (!$this->getTag('ModDate')) {
+            $this->modified($now);
+        }
+
         $customTags = Collection::make($this->tags);
 
         if ($customTags->count() > 0) {

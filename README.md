@@ -377,6 +377,7 @@ You can set PDF tags and metadata.
 ```php
 <?php
 
+use Carbon\Carbon;
 use Netflex\Render\PDF;
 
 $pdf = PDF::url('https://www.google.com');
@@ -386,6 +387,12 @@ $pdf->title('Hello World!');
 $pdf->keywords(['foo', 'bar', 'baz']);
 $pdf->description('Lorem ipsum dolor sit amet, consectetur adipiscing elit');
 $pdf->creator('Example Company Inc.');
+
+// You can also override the creation and modified dates
+$now = Carbon::now();
+
+$pdf->created($now);
+$pdf->modified($now);
 ```
 
 ## Images
