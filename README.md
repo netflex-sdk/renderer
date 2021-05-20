@@ -2,6 +2,8 @@
 
 This package provides a high-level builder interface for generating PDF's, images, and server side rendering of HTML.
 
+Full API reference is [available here](https://netflex-sdk.github.io/docs/api/Netflex/Render.html).
+
 <a href="https://packagist.org/packages/netflex/renderer"><img src="https://img.shields.io/packagist/v/netflex/renderer?label=stable" alt="Stable version"></a>
 <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/github/license/netflex-sdk/renderer.svg" alt="License: MIT"></a>
 <a href="https://packagist.org/packages/netflex/renderer/stats"><img src="https://img.shields.io/packagist/dm/netflex/renderer" alt="Downloads"></a>
