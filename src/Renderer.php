@@ -8,7 +8,8 @@ use Netflex\API\Facades\API;
 
 use Psr\Http\Message\ResponseInterface;
 
-use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Exception\BadResponseException;
+use Psr\Http\Client\ClientExceptionInterface;
 use Netflex\Render\Exceptions\RenderException;
 
 use Illuminate\Http\Request;
@@ -67,8 +68,12 @@ abstract class Renderer implements Renderable, Jsonable, JsonSerializable
                 ->post('foundation/pdf', [
                     'json' => $this->options
                 ]);
-        } catch (GuzzleException $e) {
-            throw new RenderException($e);
+        } catch (ClientExceptionInterface $exception) {
+            if ($exception instanceof BadResponseException) {
+                throw new RenderException($exception->getResponse());
+            }
+
+            throw $exception;
         }
     }
 
