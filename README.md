@@ -32,6 +32,7 @@ Full API reference is [available here](https://netflex-sdk.github.io/docs/api/Ne
   * [Set size from CSS](#set-size-from-css)
   * [Setting custom header and footer](#setting-custom-header-and-footer)
     + [Outputting page numbers etc.](#outputting-page-numbers-etc)
+  * [Tags and metadata](#tags-and-metadata)
 - [Images](#images)
   * [Setting viewport size](#setting-viewport-size)
   * [Capturing a specific element using a CSS selector](#capturing-a-specific-element-use-a-css-selector)
@@ -367,6 +368,24 @@ If you do specify a custom header or footer view, you can use the following Blad
     <div>@pdf_page_number</div>
     <div>@pdf_total_pages</div>
 </div>
+```
+
+### Tags and metadata
+
+You can set PDF tags and metadata.
+
+```php
+<?php
+
+use Netflex\Render\PDF;
+
+$pdf = PDF::url('https://www.google.com');
+
+$pdf->author('John Doe');
+$pdf->title('Hello World!');
+$pdf->keywords(['foo', 'bar', 'baz']);
+$pdf->description('Lorem ipsum dolor sit amet, consectetur adipiscing elit');
+$pdf->creator('Example Company Inc.');
 ```
 
 ## Images

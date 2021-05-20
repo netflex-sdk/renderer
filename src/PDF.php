@@ -523,7 +523,7 @@ class PDF extends Renderer
      */
     public function keywords(array $keywords)
     {
-        return $this->setTag('Subject', implode('; ', array_values($keywords)));
+        return $this->setTag('Keywords', implode('; ', array_values($keywords)));
     }
 
     /**
