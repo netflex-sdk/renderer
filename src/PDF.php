@@ -8,27 +8,52 @@ use Illuminate\Support\HtmlString;
 
 class PDF extends Renderer
 {
+    /** @var string Format */
     protected $format = 'pdf';
 
-    // Units
+    /** @var string Pixel */
     const UNIT_PX = 'px';
+
+    /** @var string Inch */
     const UNIT_IN = 'in';
+
+    /** @var string Centimeter - Default unit */
     const UNIT_CM = 'cm';
+
+    /** @var string Millimetre */
     const UNIT_MM = 'mm';
 
-    // Metric paper formats
+    /** @var string A0 paper size */
     const FORMAT_A0 = 'A0';
+
+    /** @var string A1 paper size */
     const FORMAT_A1 = 'A1';
+
+    /** @var string A2 paper size */
     const FORMAT_A2 = 'A2';
+
+    /** @var string A3 paper size */
     const FORMAT_A3 = 'A3';
+
+    /** @var string A4 paper size - Default paper size */
     const FORMAT_A4 = 'A4';
+
+    /** @var string A5 paper size */
     const FORMAT_A5 = 'A5';
+
+    /** @var string A6 paper size */
     const FORMAT_A6 = 'A6';
 
-    // US paper formats
+    /** @var string US letter paper size */
     const FORMAT_LETTER = 'Letter';
+
+    /** @var string US legal paper size */
     const FORMAT_LEGAL = 'Legal';
+
+    /** @var string US tabloid paper size */
     const FORMAT_TABLOID = 'Tabloid';
+
+    /** @var string US ledger paper size */
     const FORMAT_LEDGER = 'Ledger';
 
     /**

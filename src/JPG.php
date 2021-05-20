@@ -6,6 +6,7 @@ use Netflex\Render\Contracts\ImageRenderer;
 
 class JPG extends ImageRenderer
 {
+    /** @var string Format */
     protected $format = 'jpg';
 
     /**

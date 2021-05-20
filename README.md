@@ -2,6 +2,10 @@
 
 This package provides a high-level builder interface for generating PDF's, images, and server side rendering of HTML.
 
+<a href="https://packagist.org/packages/netflex/renderer"><img src="https://img.shields.io/packagist/v/netflex/renderer?label=stable" alt="Stable version"></a>
+<a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/github/license/netflex-sdk/renderer.svg" alt="License: MIT"></a>
+<a href="https://packagist.org/packages/netflex/renderer/stats"><img src="https://img.shields.io/packagist/dm/netflex/renderer" alt="Downloads"></a>
+
 ## Table of contents
 
 - [Installation](#installation)
@@ -27,7 +31,8 @@ This package provides a high-level builder interface for generating PDF's, image
   * [Setting custom header and footer](#setting-custom-header-and-footer)
     + [Outputting page numbers etc.](#outputting-page-numbers-etc)
 - [Images](#images)
-  * [Capturing a specific element use a CSS selector](#capturing-a-specific-element-use-a-css-selector)
+  * [Setting viewport size](#setting-viewport-size)
+  * [Capturing a specific element using a CSS selector](#capturing-a-specific-element-use-a-css-selector)
   * [Clip](#clip)
   * [Full page](#full-page)
   * [JPG](#jpg)
@@ -357,6 +362,23 @@ If you do specify a custom header or footer view, you can use the following Blad
 
 ## Images
 
+### Setting viewport size
+
+The default viewport is `1920x1080` at `1x` devicePixelRatio.
+
+```php
+<?php
+
+use Netflex\Render\PNG;
+
+$png = PNG::view('templates.example', ['foo' => 'bar']);
+
+// Viewport size 2560x1440 at 2x devicePixelRatio
+$png->width(2560);
+$png->height(1440)
+$png->devicePixelRatio(2.0);
+```
+
 These options are shared between JPG and PNG
 
 ### Capturing a specific element use a CSS selector
@@ -377,6 +399,8 @@ $png = $png->selector('span');
 
 ### Clip
 
+Notice: Clipping is always relative to the full document, even when using a selector to target an element. This is a backend limitation, and could change in the future.
+
 ```php
 <?php
 
@@ -386,10 +410,6 @@ $png = PNG::view('templates.example', ['foo' => 'bar']);
 
 // Extract a 256x256 image starting from x:10, y:10 offsets from the document top
 $png = $png->clip(10, 10, 256, 256);
-
-// Extract a 256x256 image starting from x:10, y:10 offsets from the selected elements top
-$png->selector('.logo')
-$png->clip(10, 10, 256, 256);
 ```
 
 ### Full page
