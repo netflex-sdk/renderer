@@ -64,10 +64,12 @@ abstract class Renderer implements Renderable, Jsonable, JsonSerializable
         $this->options['format'] = $this->format;
 
         try {
-            return API::getGuzzleInstance()
+            $response = API::getGuzzleInstance()
                 ->post('foundation/pdf', [
                     'json' => $this->options
                 ]);
+
+            return $this->postProcess($response);
         } catch (ClientExceptionInterface $exception) {
             if ($exception instanceof BadResponseException) {
                 throw new RenderException($exception->getResponse());
@@ -256,6 +258,17 @@ abstract class Renderer implements Renderable, Jsonable, JsonSerializable
         $content = json_decode($response->getBody());
 
         return $content->url;
+    }
+
+    /**
+     * Postprocessing stage
+     *
+     * @param ResponseInterface $response
+     * @return ResponseInterface
+     */
+    protected function postProcess(ResponseInterface $response): ResponseInterface
+    {
+        return $response;
     }
 
     /**

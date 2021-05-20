@@ -2,14 +2,31 @@
 
 namespace Netflex\Render;
 
+use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Illuminate\Support\HtmlString;
+
+use Netflex\Render\PSR7\Stream;
+use Psr\Http\Message\ResponseInterface;
+
+use Composer\InstalledVersions;
+use DateTime;
 
 class PDF extends Renderer
 {
     /** @var string Format */
     protected $format = 'pdf';
+
+    /** @var array Default PDF tags */
+    protected $tags = [];
+
+    /** @var string */
+    const DEFAULT_CREATOR = 'Apility AS';
+
+    /** @var string */
+    const DEFAULT_MARGIN = '1cm';
 
     /** @var string Pixel */
     const UNIT_PX = 'px';
@@ -64,7 +81,21 @@ class PDF extends Renderer
     {
         parent::__construct($url, $options);
         $this->emulatedMedia(null);
-        $this->margin('1cm');
+        $this->margin(static::DEFAULT_MARGIN);
+        $this->creator(static::DEFAULT_CREATOR);
+        $this->application($this->getVersion());
+    }
+
+    /**
+     * Gets the application version string
+     *
+     * @return string
+     */
+    final protected function getVersion()
+    {
+        $appName = str_replace('\\', '/', PDF::class);
+        $packageVersion = InstalledVersions::getPrettyVersion('netflex/renderer');
+        return implode(' ', [$appName, $packageVersion]);
     }
 
     /**
@@ -437,5 +468,182 @@ class PDF extends Renderer
             static::FORMAT_TABLOID,
             static::FORMAT_LEDGER,
         ];
+    }
+
+    /**
+     * Sets a PDF meta tag
+     *
+     * @param string $tag
+     * @param string|null $value
+     * @return static
+     */
+    protected function setTag(string $tag, ?string $value)
+    {
+        $this->tags[$tag] = $value;
+        return $this;
+    }
+
+    /**
+     * Gets a PDF meta tag value
+     *
+     * @param string $tag
+     * @param string|null $default
+     * @return string|null
+     */
+    protected function getTag(string $tag, ?string $default = null)
+    {
+        return $this->tags[$tag] ?? $default ?? null;
+    }
+
+    /**
+     * Sets the PDF author meta
+     *
+     * @param string $author
+     * @return static
+     */
+    public function author(string $author)
+    {
+        return $this->setTag('Author', $author);
+    }
+
+    /**
+     * Sets the PDF description meta
+     *
+     * @param string $description
+     * @return static
+     */
+    public function description(string $description)
+    {
+        return $this->setTag('Subject', $description);
+    }
+
+    /**
+     * Sets the PDF keywords meta
+     *
+     * @param array $keywords
+     * @return void
+     */
+    public function keywords(array $keywords)
+    {
+        return $this->setTag('Keywords', implode('; ', array_values($keywords)));
+    }
+
+    /**
+     * Adds a PDF meta keyword
+     *
+     * @param string $keyword
+     * @return static
+     */
+    public function keyword(string $keyword)
+    {
+        $keywords = array_values(array_filter(explode('; ', $this->getTag('Keywords', ''))));
+        $keywords[] = $keyword;
+        $keywords = array_unique($keywords);
+        return $this->keywords($keywords);
+    }
+
+    /**
+     * Sets the PDF content creator meta
+     *
+     * @param string $creator
+     * @return static
+     */
+    public function creator(string $creator)
+    {
+        return $this->setTag('Creator', $creator);
+    }
+
+    /**
+     * Sets the PDF application meta
+     *
+     * @param string $creator
+     * @return static
+     */
+    public function application(string $application)
+    {
+        return $this->setTag('Producer', $application);
+    }
+
+    /**
+     * Sets the PDF creation date
+     *
+     * @param DateTime|Carbon $date
+     * @return static
+     */
+    public function created(DateTime $date)
+    {
+        $date = new Carbon($date);
+        return $this->setTag('CreationDate', 'D:' . $date->format('YmdHis') . "+00'00'");
+    }
+
+    /**
+     * Sets the PDF last modified date
+     *
+     * @param DateTime|Carbon $date
+     * @return static
+     */
+    public function modified(DateTime $date)
+    {
+        $date = new Carbon($date);
+        return $this->setTag('ModDate', 'D:' . $date->format('YmdHis') . "+00'00'");
+    }
+
+    /**
+     * Postprocessing stage
+     *
+     * @param ResponseInterface $response
+     * @return ResponseInterface
+     */
+    protected function postProcess(ResponseInterface $response): ResponseInterface
+    {
+        $now = Carbon::now();
+
+        if (!$this->getTag('CreationDate')) {
+            $this->created($now);
+        }
+
+        if (!$this->getTag('ModDate')) {
+            $this->modified($now);
+        }
+
+        $customTags = Collection::make($this->tags);
+
+        if ($customTags->count() > 0) {
+            $content = (string) $response->getBody();
+
+            // Extract existing PDF meta tags
+            $start = strpos($content, 'obj') + strlen('obj');
+            $end = strpos($content, 'endobj', $start);
+            $length = $end - $start;
+
+            $tags = substr($content, $start, $length);
+            $tags = substr($tags, strpos($tags, '<<') + strlen('<<'));
+            $tags = substr($tags, 0, strpos($tags, '>>'));
+            $tags = explode("\n", $tags);
+
+            $tags = Collection::make($tags)
+                ->filter(function ($tag) {
+                    return preg_match('/\/\w+ \([^)]+\)/', $tag) !== false;
+                })
+                ->mapWithKeys(function ($tag) {
+                    $matches = [];
+                    preg_match('/\/(?<tag>\w+) \((?<value>[^\)]+)\)/', $tag, $matches);
+                    return [$matches['tag'] => $matches['value']];
+                });
+
+            // Overwrite PDF meta tags with extracted tags, and our custom tags
+            $tags = $tags->merge($customTags)
+                ->filter()
+                ->map(function ($value, $tag) {
+                    $tag = str_replace(' ', "\xc2\xa0", $tag);
+                    return '/' . $tag . ' (' . $value . ')';
+                })->join("\n");
+
+            $content = substr_replace($content, "\n<<" . $tags . '>>\n', $start, $length);
+
+            return $response->withBody(Stream::make($content));
+        }
+
+        return $response;
     }
 }

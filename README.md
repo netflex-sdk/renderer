@@ -32,6 +32,7 @@ Full API reference is [available here](https://netflex-sdk.github.io/docs/api/Ne
   * [Set size from CSS](#set-size-from-css)
   * [Setting custom header and footer](#setting-custom-header-and-footer)
     + [Outputting page numbers etc.](#outputting-page-numbers-etc)
+  * [Tags and metadata](#tags-and-metadata)
 - [Images](#images)
   * [Setting viewport size](#setting-viewport-size)
   * [Capturing a specific element using a CSS selector](#capturing-a-specific-element-use-a-css-selector)
@@ -42,7 +43,7 @@ Full API reference is [available here](https://netflex-sdk.github.io/docs/api/Ne
   * [PNG](#png)
     + [Transparent](#transparent)
 - [HTML](#html)
-  * [Server Side Rendering (SSR)](#server-side-rendering--ssr-)
+  * [Server Side Rendering (SSR)](#server-side-rendering-ssr)
 - [View macros](#view-macros)
 
 
@@ -367,6 +368,31 @@ If you do specify a custom header or footer view, you can use the following Blad
     <div>@pdf_page_number</div>
     <div>@pdf_total_pages</div>
 </div>
+```
+
+### Tags and metadata
+
+You can set PDF tags and metadata.
+
+```php
+<?php
+
+use Carbon\Carbon;
+use Netflex\Render\PDF;
+
+$pdf = PDF::url('https://www.google.com');
+
+$pdf->author('John Doe');
+$pdf->title('Hello World!');
+$pdf->keywords(['foo', 'bar', 'baz']);
+$pdf->description('Lorem ipsum dolor sit amet, consectetur adipiscing elit');
+$pdf->creator('Example Company Inc.');
+
+// You can also override the creation and modified dates
+$now = Carbon::now();
+
+$pdf->created($now);
+$pdf->modified($now);
 ```
 
 ## Images
