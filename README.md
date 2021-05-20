@@ -31,7 +31,7 @@ This package provides a high-level builder interface for generating PDF's, image
   * [Setting custom header and footer](#setting-custom-header-and-footer)
     + [Outputting page numbers etc.](#outputting-page-numbers-etc)
 - [Images](#images)
-  * [Capturing a specific element use a CSS selector](#capturing-a-specific-element-use-a-css-selector)
+  * [Capturing a specific element using a CSS selector](#capturing-a-specific-element-use-a-css-selector)
   * [Clip](#clip)
   * [Full page](#full-page)
   * [JPG](#jpg)
