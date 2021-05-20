@@ -381,6 +381,8 @@ $png = $png->selector('span');
 
 ### Clip
 
+Notice: Clipping is always relative to the full document, even when using a selector to target an element. This is a backend limitation, and could change in the future.
+
 ```php
 <?php
 
@@ -390,10 +392,6 @@ $png = PNG::view('templates.example', ['foo' => 'bar']);
 
 // Extract a 256x256 image starting from x:10, y:10 offsets from the document top
 $png = $png->clip(10, 10, 256, 256);
-
-// Extract a 256x256 image starting from x:10, y:10 offsets from the selected elements top
-$png->selector('.logo')
-$png->clip(10, 10, 256, 256);
 ```
 
 ### Full page
