@@ -243,6 +243,13 @@ $pdf->marginRight('100mm');
 $pdf->marginBottom('128px');
 $pdf->marginLeft(200);
 
+// ... or
+
+$pdf->marginTop(1, PDF::UNIT_CM);
+$pdf->marginRight(100, PDF::UNIT_MM);
+$pdf->marginBottom(128, PDF::UNIT_PX);
+$pdf->marginLeft(200); // Let the backend decide the unit
+
 // Or specify them like you would in CSS
 $pdf->margin('1cm'); // All margings set to 1cm
 $pdf->margin('1cm', '2cm'); // Top and bottom set to 1cm, Left and right to 2cm
@@ -258,19 +265,19 @@ use Netflex\Render\PDF;
 $pdf = PDF::view('templates.example', ['foo' => 'bar']);
 
 // Metric sizes
-$pdf->format('A0');
-$pdf->format('A1');
-$pdf->format('A2');
-$pdf->format('A3');
-$pdf->format('A4'); // <-- Default
-$pdf->format('A5');
-$pdf->format('A6');
+$pdf->format(PDF::FORMAT_A0);
+$pdf->format(PDF::FORMAT_A1);
+$pdf->format(PDF::FORMAT_A2);
+$pdf->format(PDF::FORMAT_A3);
+$pdf->format(PDF::FORMAT_A4); // <-- Default
+$pdf->format(PDF::FORMAT_A5);
+$pdf->format(PDF::FORMAT_A6);
 
 // US. sizes
-$pdf->format('Letter');
-$pdf->format('Legal');
-$pdf->format('Tabloid');
-$pdf->format('Ledger');
+$pdf->format(PDF::FORMAT_LETTER);
+$pdf->format(PDF::FORMAT_LEGAL);
+$pdf->format(PDF::FORMAT_TABLOID;
+$pdf->format(PDF::FORMAT_LEDGER);
 ```
 
 ### Document scaling
@@ -307,7 +314,7 @@ use Netflex\Render\PDF;
 
 $pdf = PDF::view('templates.example', ['foo' => 'bar']);
 
-$pdf->format('A4');
+$pdf->format(PDF::FORMAT_A3);
 $pdf->landscape();
 ```
 
@@ -533,7 +540,6 @@ View::make('example')->renderHTML();
 
 // You can also chain all the other options
 View::make('example')->renderPDF()
-    ->format('A4')
     ->printBackground(); // ...etc
 ```
 
