@@ -31,6 +31,7 @@ This package provides a high-level builder interface for generating PDF's, image
   * [Setting custom header and footer](#setting-custom-header-and-footer)
     + [Outputting page numbers etc.](#outputting-page-numbers-etc)
 - [Images](#images)
+  * [Setting viewport size](#setting-viewport-size)
   * [Capturing a specific element using a CSS selector](#capturing-a-specific-element-use-a-css-selector)
   * [Clip](#clip)
   * [Full page](#full-page)
@@ -360,6 +361,23 @@ If you do specify a custom header or footer view, you can use the following Blad
 ```
 
 ## Images
+
+### Setting viewport size
+
+The default viewport is `1920x1080` at `1x` devicePixelRatio.
+
+```php
+<?php
+
+use Netflex\Render\PNG;
+
+$png = PNG::view('templates.example', ['foo' => 'bar']);
+
+// Viewport size 2560x1440 at 2x devicePixelRatio
+$png->width(2560);
+$png->height(1440)
+$png->devicePixelRatio(2.0);
+```
 
 These options are shared between JPG and PNG
 
