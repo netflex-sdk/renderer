@@ -42,7 +42,7 @@ Full API reference is [available here](https://netflex-sdk.github.io/docs/api/Ne
   * [PNG](#png)
     + [Transparent](#transparent)
 - [HTML](#html)
-  * [Server Side Rendering (SSR)](#server-side-rendering--ssr-)
+  * [Server Side Rendering (SSR)](#server-side-rendering-ssr)
 - [View macros](#view-macros)
 
 
