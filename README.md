@@ -12,7 +12,7 @@ Full API reference is [available here](https://netflex-sdk.github.io/docs/api/Ne
 
 - [Installation](#installation)
 - [Usage](#usage)
-  * [Generating PDF/JPG/PNG/HTML](#generating-pdf-jpg-png-html)
+  * [Generating PDF/JPG/PNG/HTML](#generating-pdfjpgpnghtml)
     + [From raw HTML](#from-raw-html)
     + [By rendering a View](#by-rendering-a-view)
     + [By rendering a named Route](#by-rendering-a-named-route)
