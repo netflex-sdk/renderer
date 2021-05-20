@@ -5,10 +5,15 @@ namespace Netflex\Render\Exceptions;
 use Exception;
 
 use Illuminate\Support\Str;
+
 use Netflex\API\Traits\ParsesResponse;
 use Psr\Http\Message\ResponseInterface;
 
-class RenderException extends Exception
+use Facade\IgnitionContracts\ProvidesSolution;
+use Facade\IgnitionContracts\Solution;
+use Facade\IgnitionContracts\BaseSolution;
+
+class RenderException extends Exception implements ProvidesSolution
 {
     use ParsesResponse;
 
@@ -16,7 +21,7 @@ class RenderException extends Exception
      * @param ResponseInterface $response
      */
     public function __construct(ResponseInterface $response)
-    {   
+    {
         $message = $this->parseResponse($response);
         $error = json_decode('{' . Str::beforeLast(Str::after($message, '{'), '}') . '}');
 
@@ -25,5 +30,14 @@ class RenderException extends Exception
         }
 
         parent::__construct($message);
+    }
+
+    public function getSolution(): Solution
+    {
+        return BaseSolution::create('RenderException')
+            ->setSolutionDescription($this->getMessage())
+            ->setDocumentationLinks([
+                'Netflex Renderer documentation' => 'https://github.com/netflex-sdk/renderer#readme',
+            ]);
     }
 }
