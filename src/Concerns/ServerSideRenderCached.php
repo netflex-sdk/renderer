@@ -7,7 +7,7 @@ use Netflex\Render\Http\Middleware\SSR;
 
 trait ServerSideRenderCached
 {
-    public static function bootRendersServerside()
+    public static function bootServerSideRenderCached()
     {
         static::booted(function (Controller $controller) {
             $ttl = $controller->serverSideRenderCacheTTL ?? 0;
