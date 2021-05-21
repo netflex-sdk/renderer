@@ -636,6 +636,8 @@ class PDF extends Renderer
                 ->filter()
                 ->map(function ($value, $tag) {
                     $tag = str_replace(' ', "\xc2\xa0", $tag);
+                    $value = str_replace('(', '\(', $value);
+                    $value = str_replace(')', '\)', $value);
                     return '/' . $tag . ' (' . $value . ')';
                 })->join("\n");
 
