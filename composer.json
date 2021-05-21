@@ -38,7 +38,10 @@
   "autoload": {
     "psr-4": {
       "Netflex\\Render\\": "src/"
-    }
+    },
+    "files": [
+      "src/helpers.php"
+    ]
   },
   "extra": {
     "laravel": {
