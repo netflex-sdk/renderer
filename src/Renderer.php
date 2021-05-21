@@ -232,6 +232,7 @@ abstract class Renderer implements Renderable, Jsonable, JsonSerializable
      */
     public function toResponse($request = null)
     {
+        $time = microtime(true); // time in Microseconds
         $this->options['fetch'] = true;
 
         $response = $this->fetch();
@@ -240,9 +241,11 @@ abstract class Renderer implements Renderable, Jsonable, JsonSerializable
         $headers = $request ? $request->headers : new HeaderBag([]);
 
         $contentType = $response->getHeaderLine('Content-Type');
-        $headers->set('Content-Type', $contentType);
 
-        return new Response($content, 200, $headers->all());
+        return with(new Response($content, 200, $headers->all()))
+            ->header('Content-Type', $contentType, true)
+            ->header('X-SSR', 1, true)
+            ->header('X-SSR-Renderer-In', (microtime(true) - $time) . 's', true);
     }
 
     /**

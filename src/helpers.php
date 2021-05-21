@@ -12,13 +12,11 @@ if (!function_exists('request_ssr_key')) {
     function request_ssr_key(Request $request)
     {
         $parameters = http_build_query($request->all());
-        $headers = http_build_query($request->headers->all());
 
         $parts = [
             get_class($request),
             $request->method(),
             $request->url(),
-            $headers,
             $parameters,
         ];
 

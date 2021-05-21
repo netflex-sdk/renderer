@@ -16,13 +16,15 @@ class SSR
      *
      * @param Request $request
      * @param Closure $next
+     * @param string $option
+     * @param mixed $parameters
      * @return mixed
      *
      * @throws RenderException
      */
-    public function handle($request, Closure $next, $role = null)
+    public function handle($request, Closure $next, $option = null, ...$parameters)
     {
-        $render = function (Request $request) use ($next) {
+        $render = function () use ($request, $next) {
             /** @var Response */
             $response = $next($request);
 
@@ -36,17 +38,22 @@ class SSR
                 return HTML::from($content)->toResponse($request);
             }
 
-            return $response;
+            return $response->header('X-SSR', 0);
         };
 
-        if ($role === 'cache') {
+        if ($option === 'cache') {
             $key = request_ssr_key($request);
+            $ttl = (int) array_shift($parameters);
 
-            return Cache::rememberForever($key, function () use ($render, $request) {
-                return $render($request);
-            });
+            $response = (int) $ttl > 0
+                ? Cache::remember($key, $ttl, $render)
+                : Cache::rememberForever($key, $render);
+
+            if ($response) {
+                return $response->header('X-SSR-Cache-Hit', $key, true);
+            }
         }
 
-        return $next($request);
+        return $render();
     }
 }

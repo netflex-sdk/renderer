@@ -10,7 +10,8 @@ trait ServerSideRenderCached
     public static function bootRendersServerside()
     {
         static::booted(function (Controller $controller) {
-            $controller->middleware(SSR::class, ['cache']);
+            $ttl = $controller->serverSideRenderCacheTTL ?? 0;
+            $controller->middleware(SSR::class, ['cache', $ttl]);
         });
     }
 }
