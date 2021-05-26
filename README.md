@@ -32,6 +32,7 @@ Full API reference is [available here](https://netflex-sdk.github.io/docs/api/Ne
   * [Set size from CSS](#set-size-from-css)
   * [Setting custom header and footer](#setting-custom-header-and-footer)
     + [Outputting page numbers etc.](#outputting-page-numbers-etc)
+    + [Page break utilities](#page-break-utilities)
   * [Tags and metadata](#tags-and-metadata)
 - [Images](#images)
   * [Setting viewport size](#setting-viewport-size)
@@ -370,14 +371,14 @@ If you do specify a custom header or footer view, you can use the following Blad
 </div>
 ```
 
-#### Pake break utilities
+#### Page break utilities
 
 ```html
-<div>@page_break</div>
-<div>@page_break_before</div>
-<div>@page_break_before_avoid</div>
-<div>@page_break_after</div>
-<div>@page_break_after_avoid</div>
+<div>@pdf_page_break</div>
+<div>@pdf_page_break_before</div>
+<div>@pdf_page_break_before_avoid</div>
+<div>@pdf_page_break_after</div>
+<div>@pdf_page_break_after_avoid</div>
 ```
 
 ### Tags and metadata
