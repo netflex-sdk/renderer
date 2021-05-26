@@ -291,8 +291,8 @@ class RenderException extends Exception implements ProvidesSolution
             $message = json_encode($message, JSON_PRETTY_PRINT);
         }
 
-        $message = Str::replace('double', 'float', $message);
-        $description = Str::replace('double', 'float', $description);
+        $message = str_replace('double', 'float', $message);
+        $description = str_replace('double', 'float', $description);
 
         parent::__construct($message);
 
