@@ -370,6 +370,16 @@ If you do specify a custom header or footer view, you can use the following Blad
 </div>
 ```
 
+#### Pake break utilities
+
+```html
+<div>@page_break</div>
+<div>@page_break_before</div>
+<div>@page_break_before_avoid</div>
+<div>@page_break_after</div>
+<div>@page_break_after_avoid</div>
+```
+
 ### Tags and metadata
 
 You can set PDF tags and metadata.
