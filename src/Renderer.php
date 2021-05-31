@@ -69,7 +69,11 @@ abstract class Renderer implements Renderable, Jsonable, JsonSerializable
                     'json' => $this->options
                 ]);
 
-            return $this->postProcess($response);
+                if (!$this->options['fetch']) {
+                    return $response;
+                }
+    
+                return $this->postProcess($response);
         } catch (ClientExceptionInterface $exception) {
             if ($exception instanceof BadResponseException) {
                 throw new RenderException($exception->getResponse());
