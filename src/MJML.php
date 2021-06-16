@@ -26,6 +26,8 @@ class MJML extends Renderer
     {
         $instance = new static('');
         $instance->blob = $blob;
+
+        return $instance;
     }
 
     public function blob()
