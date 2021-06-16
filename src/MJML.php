@@ -20,6 +20,23 @@ class MJML extends Renderer
     /** @var string File extension */
     protected $extension = 'html';
 
+    protected $blob = null;
+
+    protected static function withBlob($blob)
+    {
+        $instance = new static('');
+        $instance->blob = $blob;
+    }
+
+    public function blob()
+    {
+        if ($this->blob) {
+            return $this->blob;
+        }
+
+        return parent::blob();
+    }
+
     /**
      * Render from a view
      *
@@ -58,7 +75,7 @@ class MJML extends Renderer
                     throw new ErrorException($e->getMessage(), $e->getCode(), $e->getFile(), $e->getLine(), $e->getPrevious());
                 }
 
-                return ob_get_clean();
+                return static::withBlob(ob_get_clean());
             }
 
             try {
