@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 use Netflex\Render\HTML;
+use Netflex\Render\MJML;
 use Netflex\Render\JPG;
 use Netflex\Render\PDF;
 use Netflex\Render\PNG;
@@ -29,9 +30,10 @@ class RenderServiceProvider extends ServiceProvider
     {
         $renderers = [
             HTML::class,
+            MJML::class,
             JPG::class,
             PDF::class,
-            PNG::class
+            PNG::class,
         ];
 
         foreach ($renderers as $renderer) {
