@@ -45,6 +45,8 @@ Full API reference is [available here](https://netflex-sdk.github.io/docs/api/Ne
     + [Transparent](#transparent)
 - [HTML](#html)
   * [Server Side Rendering (SSR)](#server-side-rendering-ssr)
+- [MJML](#mjml)
+  * [Usage in Mailable](#usage-in-mailable)
 - [View macros](#view-macros)
 
 
@@ -560,6 +562,74 @@ Route::group(['middleware' => 'ssr'], function () {
     Route::get('/example', 'ExampleController@show');
 });
 ```
+
+## MJML
+
+The MJML rendered is used to transform MJML to HTML.
+[MJML](https://mjml.io/) is a framework for generating responsive email markup.
+
+The MJML renderer isn't very usefull standalone, but provides a few helpers that can hook into [Mailable](https://laravel.com/docs/8.x/mail).
+
+Example:
+
+```php
+<?php
+
+use Netflex\Render\MJML;
+
+$html = MJML::from('<mjml><mj-body><mj-text>Hello World</mj-text></mj-body</mml>')
+  ->blobl();
+```
+
+### Usage in Mailable
+
+Instead of using a .blade.php file, write your view as a .mjml file.
+
+In your Mailable class, add the trait `Netflex\Render\Mail\MJML`.
+
+Example:
+
+```html
+<!-- resources/views/mail/example.mjml -->
+<mjml>
+    <mj-body>
+        <mj-section>
+            <mj-column width="100%">
+              <mj-text>
+                {{ $message }}
+                </mj-text>
+            </mj-column>
+        </mj-section>
+    </mj-body>
+</mjml>
+```
+
+```php
+<?php
+
+namespace App\Mail;
+
+use Illuminate\Mail\Mailable;
+use Netflex\Render\Mail\MJML;
+
+class ExampleMail extends Mailable
+{
+  use MJML;
+
+    /**
+     * Build the message.
+     *
+     * @return $this
+     */
+    public function build()
+    {
+        return $this->mjml('mail.example', ['message' => 'Hello World'])
+            ->subject('Rendered with MJML!');
+    }
+}
+```
+
+The resulting rendered markup will be cached until the source .mjml file changes. But variables passed to the view will still be injected dynamically.
 
 ## View macros
 
