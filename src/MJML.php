@@ -35,10 +35,10 @@ class MJML extends Renderer
             $path = resource_path(implode(DIRECTORY_SEPARATOR, ['views', str_replace('.', DIRECTORY_SEPARATOR, $view) . '.mjml']));
 
             if (file_exists($path)) {
-                $content = file_get_contents($path);
-                $hash = md5($content);
+                $hash = hash_file('md5', $path);
 
-                $php = Cache::rememberForever($hash, function () use ($content) {
+                $php = Cache::rememberForever($hash, function () use ($path) {
+                    $content = file_get_contents($path);
                     return Blade::compileString(static::from($content)->blob());
                 });
 
