@@ -8,7 +8,6 @@ use ErrorException;
 use InvalidArgumentException;
 
 use Illuminate\View\View;
-use Illuminate\Support\Facades\View as ViewFacade;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\HtmlString;
@@ -62,7 +61,11 @@ class MJML extends Renderer
                 return ob_get_clean();
             }
 
-            throw new InvalidArgumentException('MJML View [' . $view . '] not found.');
+            try {
+                return static::from(view($view, $data, $mergeData));
+            } catch (Exception $e) {
+                throw new InvalidArgumentException('MJML View [' . $view . '] not found.');
+            }
         }
 
         /** @var View $view */

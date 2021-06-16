@@ -2,9 +2,9 @@
 
 namespace Netflex\Render\Mail;
 
-use Netflex\Render\MJML;
+use Netflex\Render\MJML as Renderer;
 
-trait RendersMJML
+trait MJML
 {
     /**
      * Set the view and view data for the message.
@@ -15,7 +15,6 @@ trait RendersMJML
      */
     public function mjml($view, array $data = [])
     {
-        $mjml = MJML::view($view, $data)->blob();
-        return $this->html($mjml);
+        return $this->html(Renderer::view($view, $data)->blob());
     }
 }
