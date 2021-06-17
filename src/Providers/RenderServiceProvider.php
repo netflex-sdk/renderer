@@ -5,6 +5,8 @@ namespace Netflex\Render\Providers;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
+use Netflex\Render\View\MjmlViewFinder;
+
 use Netflex\Render\HTML;
 use Netflex\Render\MJML;
 use Netflex\Render\JPG;
@@ -17,7 +19,9 @@ class RenderServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        //
+        $this->app->bind('mjml.finder', function ($app) {
+            return new MjmlViewFinder($app['files'], $app['config']['view.paths']);
+        });
     }
 
     public function boot()
