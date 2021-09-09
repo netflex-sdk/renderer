@@ -57,6 +57,25 @@ abstract class Renderer implements Renderable, Jsonable, JsonSerializable
     }
 
     /**
+     * @return object
+     */
+    protected static function status ()
+    {
+        return API::get('foundation/pdf/status');
+    }
+
+    /**
+     * Get the Chromium version of the renderer
+     * 
+     * @return string
+     */
+    public static function version ()
+    {
+        return static::status()
+            ->chromium;
+    }
+
+    /**
      * @return ResponseInterface
      */
     protected function fetch()
