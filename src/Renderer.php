@@ -324,7 +324,7 @@ abstract class Renderer implements Renderable, Jsonable, JsonSerializable
             $html = $html->__toString();
         }
 
-        return static::url('data:text/html;base64,' . base64_encode($html));
+        return static::url('data:text/html;charset=utf-8;base64,' . base64_encode($html));
     }
 
     /**
