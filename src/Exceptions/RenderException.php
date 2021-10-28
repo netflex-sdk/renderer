@@ -6,7 +6,7 @@ use Exception;
 
 use Illuminate\Support\Str;
 
-use Netflex\API\Traits\ParsesResponse;
+use Netflex\Http\Concerns\ParsesResponse;
 use Psr\Http\Message\ResponseInterface;
 
 use Facade\IgnitionContracts\ProvidesSolution;
@@ -277,7 +277,7 @@ class RenderException extends Exception implements ProvidesSolution
                 foreach ($this->errors as $key => $value) {
                     $code = is_string($key) ? $key : $value;
                     $helper = $value;
-                    
+
                     if (Str::contains($description, $code)) {
                         $message = $description;
                         $description = $helper;
