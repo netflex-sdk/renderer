@@ -402,6 +402,7 @@ abstract class Renderer implements Renderable, Jsonable, JsonSerializable
     /**
      * @return string
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return $this->__toString();
