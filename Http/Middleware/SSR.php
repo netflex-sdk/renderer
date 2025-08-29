@@ -7,7 +7,6 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
-use Netflex\Render\Exceptions\RenderException;
 use Netflex\Render\HTML;
 
 class SSR

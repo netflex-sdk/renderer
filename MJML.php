@@ -5,6 +5,7 @@ namespace Netflex\Render;
 use Exception;
 use Throwable;
 use ErrorException;
+use InvalidArgumentException;
 
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Cache;
